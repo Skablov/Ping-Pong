@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>2D games</title>
+	<style type="text/css">
+
+		canvas
+		{
+			display:block;
+			outline: 1px solid black;
+			margin: 0 auto;
+		}
+	</style>
+</head>
+<body>
+	<p id = 'score'></p>
+	<p id = 'score1'><</p>
+	<p id = 'score12'></p>
+	<p id = 'score2'></p>
+
+	<div  id = 'score'></div>
+	<canvas id = "canvas" width="400" height="400"></canvas>
+
+	<script type="text/javascript">
+		var canvas = document.getElementById('canvas');
+		var ctx = canvas.getContext("2d");
+		var posX = 200;
+		var posY = 200;
+		var speedX = 5;
+		var speedY = 3;
+		
+		var paddleHeight = 10;
+		var paddleWidth = 75;
+		var paddleX = (canvas.width - paddleWidth) / 2;
+
+		var rightPressed = false;
+		var leftPressed = false;
+		
+		var paddleHeight1 = 10;
+		var paddleWidth1 = 75;
+		var paddleX1 = (canvas.width - paddleWidth1) / 2;
+		var score1 = 0;
+		var score2 = 0;
+
+
+
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup", keyUpHandler, false);
+
+		function drawPaddle()
+		{
+			ctx.beginPath();
+			ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth,paddleHeight );
+			ctx.fillStyle = "green";
+			ctx.fill();
+			ctx.closePath();
+		}
+
+		function drawPaddle1()
+		{
+			ctx.beginPath();
+			ctx.rect(paddleX1, 0, paddleWidth, paddleHeight);
+			ctx.fillStyle = "black";
+			ctx.fill();
+			ctx.closePath();
+		}
+
+		function keyDownHandler(e)
+		{
+			if(e.keyCode == 39)
+			{
+				rightPressed = true;
+			}
+			if(e.keyCode == 37)
+			{
+				leftPressed = true;
+			}
+		}
+		function keyUpHandler(e)
+		{
+			if(e.keyCode == 39)
+				rightPressed = false;
+			if(e.keyCode == 37)
+				leftPressed = false;
+		}
+		if (rightPressed)
+		{
+			paddleX += 7;
+		}
+		else 
+		{
+			paddleX -=7;
+		}
+
+
+		function Comp()
+		{
+
+			if (posX < paddleX1)
+			{
+				if(paddleX1 > 0 )
+				paddleX1 -= 5;
+			}
+			else
+				if (posX > paddleX1)
+				{
+					if(paddleX1 < canvas.width - paddleWidth1 )
+					paddleX1 += 5;
+				}
+		}
+
+		
+
+
+
+		function draw()
+		{	
+			
+			
+			ctx.clearRect(0, 0 , canvas.width, canvas.height);
+			
+			drawBall();
+			drawPaddle();
+			drawPaddle1();
+			Comp();
+			
+			
+			
+			posX += speedX;
+			posY += speedY;
+
+			
+			
+
+
+		}
+		function drawBall()
+		{
+			if (posX + speedX >= canvas.width) 
+			{
+				speedX = -5;
+			}
+			else 
+				if(posY + speedY >= canvas.height)
+					{
+						posX = 200;
+						posY = 200;
+						score2 += 1;
+					}
+
+			if (posX + speedX < 0)
+			{
+				speedX = +5;
+			}
+			else
+				if (posY + speedY < 0)
+				{
+					posX = 200;
+					posY = 200;
+					score1 += 1;
+				}
+
+				if (rightPressed && paddleX < canvas.width - paddleWidth)
+				{
+					paddleX += 7;
+				}
+				else
+					if(leftPressed && paddleX > 0)
+					{
+						paddleX -= 7;
+					}
+					
+				if (posY > canvas.width - paddleHeight - 25)
+				{
+					
+					if (posX >= paddleX + 3.5 && posX <= paddleX + 0.5 + 77)
+					speedY = -3;
+				}
+
+				if (posY < paddleHeight1 + 25)
+				{
+					if (posX >= paddleX1 + 3.5 && posX <= paddleX1 + 77.5)
+						speedY = 3;
+				}
+				
+				document.getElementById('score').innerHTML ='Ваш счет = ';
+				document.getElementById('score1').innerHTML =score1;
+				document.getElementById('score12').innerHTML ='Не Ваш счет = ';
+				document.getElementById('score2').innerHTML =score2;
+
+
+
+
+			ctx.beginPath()
+			ctx.arc(posX, posY, 10, 0, Math.PI*2, false);
+			ctx.fillStyle = "red";
+			ctx.fill();
+			ctx.closePath();
+		}
+		setInterval(draw, 1000/30);
+
+		
+
+	</script>
+
+</body>
+</html>
